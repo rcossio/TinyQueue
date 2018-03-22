@@ -6,7 +6,7 @@
 #-------------------------------------------
 
 term() { 
-  echo -e "\nCaught SIGINT signal!" 
+  echo -e "\nCaught SIGINT/SIGTERM signal!" 
 
   for child in $(jobs -p)
   do
@@ -16,14 +16,15 @@ term() {
 }
 
 trap term SIGINT
+trap term SIGTERM
 
 
 #-------------------------------------------
-#    Define the task
+#    Define task as a function
 #-------------------------------------------
 
 function run_task {
-sleep 3
+sleep 5
 echo Completed  $1 $2 $3
 }
 
@@ -50,7 +51,20 @@ do
                 ((Tasks--))
             fi
 
-            run_task $i $j $k   &
+            #------------------------------------
+            #    Run task as a function
+            #------------------------------------
+            #run_task $i $j $k   &
+
+
+            #------------------------------------
+            #    Run task as a piece of code
+            #------------------------------------
+            { 
+                sleep 3
+                echo Completed  $i $j $k 
+            } &
+
             ((Tasks++)) 
 
         done
